@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Troya Team — киберспорт (почти)</title>
+  <meta name="description" content="Troya Team — мы играем плохо, но делаем это красиво. Состав, медиа и контакты." />
+
+  <style>
+    :root{
+      --bg0:#07080c;
+      --bg1:#0b0f1a;
+      --card:#0f1424cc;
+      --stroke:#252b3d;
+      --text:#e9eefc;
+      --muted:#aab3cf;
+      --accent:#ffe600; /* NAVI-ish yellow */
+      --accent2:#7cf7ff;
+      --danger:#ff4d6d;
+      --ok:#38f08f;
+
+      --r:16px;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(1200px 700px at 18% 12%, rgba(124,247,255,.12), transparent 60%),
+        radial-gradient(900px 600px at 70% 30%, rgba(255,230,0,.12), transparent 55%),
+        radial-gradient(1100px 900px at 65% 85%, rgba(255,77,109,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* ====== Background canvas particles ====== */
+    #fx{
+      position:fixed; inset:0;
+      z-index:-2;
+      opacity:.9;
+    }
+    .grain{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-1;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+      opacity:.14;
+    }
+
+    a{color:inherit; text-decoration:none}
+    .wrap{width:min(1120px, 92vw); margin:0 auto}
+
+    /* ====== Header ====== */
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(7,8,12,.78), rgba(7,8,12,.35));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      letter-spacing:.6px;
+    }
+    .logo{
+      width:42px; height:42px; border-radius:12px;
+      background:
+        radial-gradient(20px 20px at 25% 35%, rgba(255,255,255,.35), transparent 60%),
+        linear-gradient(135deg, rgba(255,230,0,.95), rgba(124,247,255,.9));
+      box-shadow: 0 14px 40px rgba(255,230,0,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transform: rotate(20deg);
+      animation: shine 3.8s ease-in-out infinite;
+    }
+    @keyframes shine{
+      0%,55%{transform:translateX(-40%) rotate(20deg); opacity:0}
+      60%{opacity:1}
+      100%{transform:translateX(60%) rotate(20deg); opacity:0}
+    }
+    .brand b{font-size:18px}
+    .brand small{display:block; color:var(--muted); margin-top:-2px}
+
+    .links{display:flex; gap:18px; align-items:center}
+    .links a{
+      color:rgba(233,238,252,.88);
+      font-weight:600;
+      padding:10px 10px;
+      border-radius:12px;
+      transition:.2s ease;
+    }
+    .links a:hover{
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      transform: translateY(-1px);
+    }
+
+    .cta{
+      display:flex; gap:10px; align-items:center;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:14px;
+      font-weight:800;
+      letter-spacing:.2px;
+      transition:.2s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.07)}
+    .btn.primary{
+      border-color: rgba(255,230,0,.35);
+      background:
+        radial-gradient(140px 90px at 20% 30%, rgba(255,255,255,.22), transparent 60%),
+        linear-gradient(135deg, rgba(255,230,0,.95), rgba(255,230,0,.55));
+      color:#0b0f1a;
+      box-shadow: 0 16px 45px rgba(255,230,0,.16);
+    }
+    .btn.primary:hover{filter:saturate(1.1); transform: translateY(-2px)}
+    .menuBtn{
+      display:none;
+      width:44px; height:44px; border-radius:14px;
+      align-items:center; justify-content:center;
+    }
+
+    /* ====== Hero ====== */
+    .hero{
+      padding:54px 0 18px;
+      position:relative;
+    }
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:24px;
+      align-items:stretch;
+    }
+    .kicker{
+      display:inline-flex; gap:10px; align-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding:8px 12px;
+      border-radius:999px;
+      color:rgba(233,238,252,.92);
+      font-weight:700;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:99px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(255,230,0,.35);
+    }
+
+    h1{
+      margin:16px 0 10px;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height:1.04;
+      letter-spacing:-.8px;
+    }
+    .grad{
+      background: linear-gradient(90deg, #fff, #cfe9ff 35%, #fff 60%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .tagline{
+      color:rgba(170,179,207,.95);
+      font-size:18px;
+      max-width: 60ch;
+    }
+    .tagline b{color:var(--accent)}
+    .heroActions{
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .stats{
+      margin-top:16px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(15,20,36,.55);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.28);
+      min-width: 160px;
+    }
+    .pill b{display:block; font-size:16px}
+    .pill span{color:var(--muted); font-weight:650}
+
+    .heroCard{
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(600px 280px at 30% 20%, rgba(255,230,0,.16), transparent 60%),
+        radial-gradient(540px 260px at 80% 40%, rgba(124,247,255,.12), transparent 55%),
+        rgba(15,20,36,.55);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .heroCard .top{
+      padding:18px 18px 12px;
+    }
+    .heroCard h3{
+      margin:0 0 6px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .heroCard p{margin:0; color:var(--muted)}
+    .meter{
+      margin-top:14px;
+      display:grid;
+      gap:10px;
+    }
+    .barRow{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      color:rgba(233,238,252,.88);
+      font-weight:700;
+      font-size:13px;
+    }
+    .bar{
+      height:10px;
+      border-radius:99px;
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      position:relative;
+    }
+    .bar > i{
+      display:block; height:100%;
+      width:0%;
+      border-radius:99px;
+      background: linear-gradient(90deg, rgba(255,230,0,.95), rgba(124,247,255,.9));
+      box-shadow: 0 0 22px rgba(124,247,255,.22);
+      animation: fill 1.2s ease forwards;
+    }
+    @keyframes fill{
+      to{width: var(--w)}
+    }
+    .heroMedia{
+      position:relative;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:14px 18px 18px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      color:rgba(233,238,252,.9);
+    }
+    .badge{
+      display:inline-flex; gap:10px; align-items:center;
+      font-weight:800;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+    .badge em{font-style:normal; color:var(--accent)}
+    .miniNote{color:var(--muted); font-weight:650; font-size:13px; text-align:right}
+
+    /* ====== Sections ====== */
+    section{padding: 44px 0}
+    .sectionTitle{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:14px;
+      margin-bottom: 18px;
+    }
+    .sectionTitle h2{
+      margin:0;
+      font-size: 26px;
+      letter-spacing:-.3px;
+    }
+    .sectionTitle p{
+      margin:0;
+      color:var(--muted);
+      font-weight:650;
+      max-width: 60ch;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(15,20,36,.55);
+      border-radius: var(--r);
+      box-shadow: 0 16px 60px rgba(0,0,0,.38);
+      overflow:hidden;
+    }
+    .cardPad{padding:18px}
+    .list{
+      margin:0; padding:0; list-style:none;
+      display:grid; gap:10px;
+    }
+    .li{
+      display:flex; gap:10px; align-items:flex-start;
+      color:rgba(233,238,252,.92);
+      font-weight:650;
+    }
+    .li i{
+      width:10px; height:10px; border-radius:99px;
+      margin-top: 6px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 16px rgba(255,230,0,.20);
+      flex: 0 0 auto;
+    }
+    .li span{color:var(--muted); font-weight:650}
+
+    /* ====== Roster ====== */
+    .roster{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap:14px;
+    }
+    .player{
+      position:relative;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(15,20,36,.55);
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: 0 16px 60px rgba(0,0,0,.38);
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+      cursor: default;
+    }
+    .player:hover{
+      transform: translateY(-6px);
+      border-color: rgba(255,230,0,.22);
+      background: rgba(15,20,36,.72);
+    }
+    .player .img{
+      height: 170px;
+      background: rgba(255,255,255,.05);
+      position:relative;
+      overflow:hidden;
+    }
+    .player .img img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+    .player:hover .img img{
+      transform: scale(1.08);
+      filter:saturate(1.15) contrast(1.05);
+    }
+    .player .img:after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55)),
+        radial-gradient(240px 140px at 30% 10%, rgba(255,230,0,.18), transparent 60%);
+      pointer-events:none;
+    }
+    .player .meta{
+      padding:12px 12px 14px;
+    }
+    .nick{
+      margin:0;
+      font-weight:900;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .role{
+      font-size:12px;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      color: rgba(233,238,252,.9);
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .realname{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-weight:650;
+      font-size:13px;
+    }
+    .skill{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      font-size:12px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding:6px 8px;
+      border-radius: 999px;
+      color: rgba(233,238,252,.92);
+    }
+    .chip.bad{border-color: rgba(255,77,109,.25); background: rgba(255,77,109,.08)}
+    .chip.good{border-color: rgba(56,240,143,.20); background: rgba(56,240,143,.07)}
+    .chip.y{border-color: rgba(255,230,0,.25); background: rgba(255,230,0,.07); color:#fff}
+
+    /* ====== Team photo ====== */
+    .team{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .teamPhoto{
+      border-radius: var(--r);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      position:relative;
+      min-height: 320px;
+    }
+    .teamPhoto img{
+      width:100%; height:100%;
+      object-fit:cover;
+      transform: scale(1.02);
+      filter:saturate(1.08) contrast(1.03);
+    }
+    .teamPhoto:after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(560px 260px at 25% 10%, rgba(255,230,0,.18), transparent 65%),
+        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55));
+      pointer-events:none;
+    }
+    .quote{
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .quote blockquote{
+      margin:0; padding:18px;
+      border-radius: var(--r);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(15,20,36,.55);
+      box-shadow: 0 16px 60px rgba(0,0,0,.38);
+      font-weight:750;
+      color: rgba(233,238,252,.92);
+    }
+    .quote blockquote span{color:var(--accent)}
+    .quote small{
+      display:block; margin-top:12px;
+      color: var(--muted);
+      font-weight:650;
+    }
+
+    /* ====== Sponsor marquee ====== */
+    .marquee{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      overflow:hidden;
+      box-shadow: 0 16px 60px rgba(0,0,0,.28);
+    }
+    .marqueeTrack{
+      display:flex;
+      gap:26px;
+      padding:12px 16px;
+      width:max-content;
+      animation: scroll 18s linear infinite;
+    }
+    @keyframes scroll{
+      to{transform: translateX(-50%)}
+    }
+    .sItem{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color: rgba(233,238,252,.86);
+      font-weight:850;
+      letter-spacing:.2px;
+      opacity:.85;
+    }
+    .sItem b{color: var(--accent)}
+    .sDot{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.28)}
+
+    /* ====== Footer ====== */
+    footer{
+      padding: 26px 0 42px;
+      border-top:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+    }
+    .foot{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .socials{display:flex; gap:10px; flex-wrap:wrap}
+    .iconBtn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      transition:.2s ease;
+      font-weight:850;
+      color: rgba(233,238,252,.9);
+    }
+    .iconBtn:hover{transform: translateY(-2px); background: rgba(255,255,255,.06)}
+    .mini{
+      color: var(--muted);
+      font-weight:650;
+      font-size:13px;
+      max-width: 60ch;
+    }
+
+    /* ====== Reveal on scroll ====== */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity .65s ease, transform .65s ease;
+      will-change: opacity, transform;
+    }
+    .reveal.on{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* ====== Responsive ====== */
+    @media (max-width: 980px){
+      .heroGrid{grid-template-columns: 1fr}
+      .team{grid-template-columns: 1fr}
+      .roster{grid-template-columns: repeat(2, 1fr)}
+      .links{display:none}
+      .menuBtn{display:inline-flex}
+    }
+    @media (max-width: 520px){
+      .roster{grid-template-columns: 1fr}
+      .pill{min-width: 100%}
+      .brand b{font-size:16px}
+    }
+
+    /* ====== Mobile menu ====== */
+    .drawer{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      display:none;
+      z-index:60;
+    }
+    .drawer.on{display:block}
+    .drawerPanel{
+      position:absolute; right:14px; top:14px;
+      width:min(420px, calc(100vw - 28px));
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(15,20,36,.92);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .drawerPanel .head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .drawerPanel .body{
+      padding: 10px;
+      display:grid; gap:8px;
+    }
+    .drawerPanel .body a{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      font-weight:850;
+    }
+    .drawerPanel .body a:hover{background: rgba(255,255,255,.06)}
+  </style>
+</head>
+
+<body>
+  <!-- Particle canvas -->
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Mobile drawer -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawerPanel" role="dialog" aria-modal="true" aria-label="Меню">
+      <div class="head">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <b>Troya Team</b>
+            <small>киберспорт (почти)</small>
+          </div>
+        </div>
+        <button class="btn" id="closeDrawer" type="button">Закрыть</button>
+      </div>
+      <div class="body">
+        <a href="#about" class="drawerLink">О нас</a>
+        <a href="#roster" class="drawerLink">Состав</a>
+        <a href="#media" class="drawerLink">Командное фото</a>
+        <a href="#contact" class="drawerLink">Контакты</a>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Troya Team — на главную">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <b>Troya Team</b>
+          <small>мы играем плохо, но стабильно</small>
+        </div>
+      </a>
+
+      <nav class="links" aria-label="Навигация">
+        <a href="#about">О нас</a>
+        <a href="#roster">Состав</a>
+        <a href="#media">Медиа</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+
+      <div class="cta">
+        <button class="btn menuBtn" id="openDrawer" type="button" aria-label="Открыть меню">☰</button>
+        <a class="btn" href="#roster">Состав</a>
+        <a class="btn primary" href="#contact">Скримы?</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap heroGrid">
+        <div class="reveal">
+          <div class="kicker"><span class="dot"></span> Troya Team • топ-1 по мемам • топ-999 по aim</div>
+          <h1><span class="grad">Troya Team</span><br/>киберспорт (ну почти)</h1>
+          <p class="tagline">
+            Мы не обещаем победы. Мы обещаем <b>контент</b>, хаос и один раунд в матч, где внезапно всё получается.
+            Если ищешь команду с идеальным рейтингом — это не сюда. Если хочешь повеселиться — добро пожаловать.
+          </p>
+
+          <div class="heroActions">
+            <a class="btn primary" href="#contact">Связаться</a>
+            <a class="btn" href="#media">Командное фото</a>
+            <a class="btn" href="#about">Почему мы такие?</a>
+          </div>
+
+          <div class="stats">
+            <div class="pill">
+              <b>Сильная сторона</b>
+              <span>уверенность после 0:8</span>
+            </div>
+            <div class="pill">
+              <b>Стратегия</b>
+              <span>“пушим и молимся”</span>
+            </div>
+            <div class="pill">
+              <b>Менталка</b>
+              <span>сломалась, но держится</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="heroCard reveal" style="animation-delay:.08s">
+          <div class="top">
+            <h3>Панель честности</h3>
+            <p>Официальные показатели Troya Team (почти научно).</p>
+
+            <div class="meter">
+              <div>
+                <div class="barRow"><span>Аим</span><span>31%</span></div>
+                <div class="bar"><i style="--w:31%"></i></div>
+              </div>
+              <div>
+                <div class="barRow"><span>Тимплей</span><span>58%</span></div>
+                <div class="bar"><i style="--w:58%"></i></div>
+              </div>
+              <div>
+                <div class="barRow"><span>Мемы</span><span>100%</span></div>
+                <div class="bar"><i style="--w:100%"></i></div>
+              </div>
+              <div>
+                <div class="barRow"><span>Удача</span><span>12%</span></div>
+                <div class="bar"><i style="--w:12%"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="heroMedia">
+            <div class="badge">🔥 <em>0</em> трофеев, но всё впереди</div>
+            <div class="miniNote">* “впереди” — это где-то в будущем<br/>* “где-то” — не уточняем</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="wrap">
+        <div class="sectionTitle reveal">
+          <div>
+            <h2>О нас</h2>
+            <p>Мы — команда, которая умеет проигрывать красиво. А иногда даже выигрывать — случайно.</p>
+          </div>
+          <div class="kicker"><span class="dot"></span> девиз: “не тильтовать… ну ладно”</div>
+        </div>
+
+        <div class="grid2">
+          <div class="card reveal">
+            <div class="cardPad">
+              <h3 style="margin:0 0 10px">Что мы делаем</h3>
+              <ul class="list">
+                <li class="li"><i></i><div>Играем в киберспорт <span>(иногда попадаем)</span></div></li>
+                <li class="li"><i></i><div>Стримим и делаем клипы <span>(где видно, что мы старались)</span></div></li>
+                <li class="li"><i></i><div>Тренируем “стратегии” <span>(звучит умно, да?)</span></div></li>
+                <li class="li"><i></i><div>Собираем комьюнити <span>(мемы, рофлы, дружба)</span></div></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="cardPad">
+              <h3 style="margin:0 0 10px">Что нам нужно</h3>
+              <ul class="list">
+                <li class="li"><i></i><div>Скрим-партнёры <span>(не токсичные, пожалуйста)</span></div></li>
+                <li class="li"><i></i><div>Тренер <span>(который не уйдёт на 2-й минуте)</span></div></li>
+                <li class="li"><i></i><div>Спонсор <span>(готовый инвестировать в мемы)</span></div></li>
+                <li class="li"><i></i><div>Фанаты <span>(которые верят даже при 0:13)</span></div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="marquee reveal" aria-label="Лента партнеров (для красоты)">
+          <div class="marqueeTrack" id="marqueeTrack">
+            <div class="sItem"><span class="sDot"></span> Партнёр <b>Когда-Нибудь</b></div>
+            <div class="sItem"><span class="sDot"></span> Организация <b>Стабильный Тильт</b></div>
+            <div class="sItem"><span class="sDot"></span> Бренд <b>Промах-Энерджи</b></div>
+            <div class="sItem"><span class="sDot"></span> Фонд <b>Последнего Раунда</b></div>
+            <div class="sItem"><span class="sDot"></span> Лига <b>Нажми F</b></div>
+
+            <!-- duplicate for seamless scroll -->
+            <div class="sItem"><span class="sDot"></span> Партнёр <b>Когда-Нибудь</b></div>
+            <div class="sItem"><span class="sDot"></span> Организация <b>Стабильный Тильт</b></div>
+            <div class="sItem"><span class="sDot"></span> Бренд <b>Промах-Энерджи</b></div>
+            <div class="sItem"><span class="sDot"></span> Фонд <b>Последнего Раунда</b></div>
+            <div class="sItem"><span class="sDot"></span> Лига <b>Нажми F</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROSTER -->
+    <section id="roster">
+      <div class="wrap">
+        <div class="sectionTitle reveal">
+          <div>
+            <h2>Состав</h2>
+            <p>У тебя будет 5 отдельных фото — просто замени пути к картинкам ниже.</p>
+          </div>
+          <div class="kicker"><span class="dot"></span> “мы как 5 пальцев” • иногда в разные стороны</div>
+        </div>
+
+        <div class="roster">
+          <!-- ПЛЕЙСХОЛДЕРЫ: замени src на свои файлы p1.jpg ... p5.jpg -->
+          <article class="player reveal">
+            <div class="img">
+              <img src="p1.jpg" alt="Игрок 1 — фото" onerror="this.src=placeholder()" />
+            </div>
+            <div class="meta">
+              <p class="nick">akuma_cxz<span class="role">Entry</span></p>
+              <p class="realname">Сергей Акумулятор • “влетел и забыл гранату”</p>
+              <div class="skill">
+                <span class="chip y">агрессия</span>
+                <span class="chip bad">флешит своих</span>
+                <span class="chip good">не сдается</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="player reveal">
+            <div class="img">
+              <img src="p2.jpg" alt="Игрок 2 — фото" onerror="this.src=placeholder()" />
+            </div>
+            <div class="meta">
+              <p class="nick">lamarezz<span class="role">IGL</span></p>
+              <p class="realname">Денис Лук • “план есть, но мы его забыли”</p>
+              <div class="skill">
+                <span class="chip y">коллы</span>
+                <span class="chip bad">“ещё один раунд”</span>
+                <span class="chip good">тайминги</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="player reveal">
+            <div class="img">
+              <img src="p3.jpg" alt="Игрок 3 — фото" onerror="this.src=placeholder()" />
+            </div>
+            <div class="meta">
+              <p class="nick">fckinsomnia<span class="role">Support</span></p>
+              <p class="realname">Карина Шляпес • “кидает смоки… куда-то”</p>
+              <div class="skill">
+                <span class="chip y">utility</span>
+                <span class="chip bad">смок на себя</span>
+                <span class="chip good">терпит</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="player reveal">
+            <div class="img">
+              <img src="p4.jpg" alt="Игрок 4 — фото" onerror="this.src=placeholder()" />
+            </div>
+            <div class="meta">
+              <p class="nick">xlldw<span class="role">AWP</span></p>
+              <p class="realname">Кирилл Морда • “иногда попадает. иногда — в стену”</p>
+              <div class="skill">
+                <span class="chip y">AWP</span>
+                <span class="chip bad">нервы</span>
+                <span class="chip good">клатчи (раз в год)</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="player reveal">
+            <div class="img">
+              <img src="p5.jpg" alt="Игрок 5 — фото" onerror="this.src=placeholder()" />
+            </div>
+            <div class="meta">
+              <p class="nick">banchanxxs<span class="role">Anchor</span></p>
+              <p class="realname">Лена Пельмень • “держит плент и нашу самооценку”</p>
+              <div class="skill">
+                <span class="chip y">позиционка</span>
+                <span class="chip bad">соло ретейк</span>
+                <span class="chip good">холодный ум</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM PHOTO -->
+    <section id="media">
+      <div class="wrap">
+        <div class="sectionTitle reveal">
+          <div>
+            <h2>Командное фото</h2>
+            <p>Одна общая фотка — сюда. А ниже — наша “легенда”.</p>
+          </div>
+          <div class="kicker"><span class="dot"></span> режим: “собрались — уже победа”</div>
+        </div>
+
+        <div class="team">
+          <div class="teamPhoto reveal">
+            <img src="team.jpg" alt="Troya Team — командное фото" onerror="this.src=placeholderWide()" />
+          </div>
+
+          <div class="quote reveal">
+            <blockquote>
+              “Мы не ищем лёгких путей. Мы просто <span>случайно</span> всегда выбираем самый странный.”
+              <small>— Troya Team, после очередного “давайте быстро закончим”</small>
+            </blockquote>
+
+            <div class="card" style="margin-top:14px">
+              <div class="cardPad">
+                <h3 style="margin:0 0 8px">Наши принципы</h3>
+                <ul class="list" style="gap:8px">
+                  <li class="li"><i></i><div>Не сдаваться <span>(даже если уже поздно)</span></div></li>
+                  <li class="li"><i></i><div>Уважать соперника <span>(и свои промахи)</span></div></li>
+                  <li class="li"><i></i><div>Делать контент <span>(потому что победы редкие)</span></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="sectionTitle reveal">
+          <div>
+            <h2>Контакты</h2>
+            <p>Пиши по скримам/турнирам/мем-коллабам. Мы отвечаем быстрее, чем целимся.</p>
+          </div>
+          <div class="kicker"><span class="dot"></span> “ответим” ≠ “выиграем”</div>
+        </div>
+
+        <div class="grid2">
+          <div class="card reveal">
+            <div class="cardPad">
+              <h3 style="margin:0 0 8px">Связаться</h3>
+              <p style="margin:0 0 12px; color:var(--muted); font-weight:650">
+                Замени ссылки на свои реальные.
+              </p>
+
+              <div class="socials">
+                <a class="iconBtn" href="#" target="_blank" rel="noreferrer">💬 Discord</a>
+                <a class="iconBtn" href="#" target="_blank" rel="noreferrer">📣 Telegram</a>
+                <a class="iconBtn" href="#" target="_blank" rel="noreferrer">🎥 YouTube</a>
+                <a class="iconBtn" href="#" target="_blank" rel="noreferrer">🎮 Twitch</a>
+              </div>
+
+              <div style="height:10px"></div>
+              <div class="mini">
+                Подсказка: если хочешь кнопку “Написать”, сделай ссылку на Telegram/Discord invite.
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="cardPad">
+              <h3 style="margin:0 0 8px">Скрим-форма (прямо на странице)</h3>
+              <p style="margin:0 0 12px; color:var(--muted); font-weight:650">
+                Это демонстрация. Можно подключить к Google Forms / Telegram bot позже.
+              </p>
+
+              <form id="scrimForm">
+                <div style="display:grid; gap:10px">
+                  <input required name="team" placeholder="Команда / Организация"
+                    style="padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--text);font-weight:700" />
+                  <input required name="contact" placeholder="Контакт (Discord/Telegram)"
+                    style="padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--text);font-weight:700" />
+                  <select name="game"
+                    style="padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(15,20,36,.72);color:var(--text);font-weight:800">
+                    <option value="cs2">CS2</option>
+                    <option value="valorant">Valorant</option>
+                    <option value="dota2">Dota 2</option>
+                    <option value="other">Другое</option>
+                  </select>
+                  <textarea name="msg" rows="3" placeholder="Сообщение (время/дата/условия)"
+                    style="padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--text);font-weight:700;resize:vertical"></textarea>
+
+                  <button class="btn primary" type="submit">Отправить (понарошку)</button>
+                  <div id="formNote" class="mini" aria-live="polite"></div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <b>Troya Team</b>
+            <small>“мы тренируемся… иногда”</small>
+          </div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="mini">
+          © <span id="y"></span> Troya Team. Все права на мемы — у интернета.
+          <br/>Сайт сделан так, чтобы выглядело серьёзно, даже если мы не всегда серьёзные.
+        </div>
+      </div>
+
+      <div>
+        <div class="socials">
+          <a class="iconBtn" href="#top">⬆️ Наверх</a>
+          <a class="iconBtn" href="#roster">👥 Состав</a>
+          <a class="iconBtn" href="#contact">📨 Контакты</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ====== Helpers: placeholders if images missing ======
+    function svgData(text, wide=false){
+      const w = wide ? 1400 : 900, h = wide ? 700 : 900;
+      const t = (text || "Troya Team").replace(/</g,"&lt;");
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffe600" stop-opacity=".95"/>
+              <stop offset="1" stop-color="#7cf7ff" stop-opacity=".9"/>
+            </linearGradient>
+            <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#000" flood-opacity=".55"/>
+            </filter>
+          </defs>
+          <rect width="100%" height="100%" fill="#0b0f1a"/>
+          <circle cx="${wide?260:260}" cy="${wide?260:260}" r="${wide?210:220}" fill="url(#g)" opacity=".25"/>
+          <circle cx="${wide?980:640}" cy="${wide?290:610}" r="${wide?280:260}" fill="url(#g)" opacity=".18"/>
+          <rect x="60" y="${wide?240:340}" width="${wide?1280:780}" height="220" rx="28" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"/>
+          <text x="110" y="${wide?330:440}" font-family="Arial, sans-serif" font-size="${wide?74:62}" font-weight="900" fill="#ffffff" filter="url(#s)">
+            ${t}
+          </text>
+          <text x="110" y="${wide?395:505}" font-family="Arial, sans-serif" font-size="${wide?28:24}" font-weight="700" fill="rgba(233,238,252,.78)">
+            фотку добавим позже (но сайт уже красивый)
+          </text>
+        </svg>`;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+    function placeholder(){ return svgData("Troya Team • Player"); }
+    function placeholderWide(){ return svgData("Troya Team • Командное фото", true); }
+
+    // ====== Reveal on scroll ======
+    const revealEls = [...document.querySelectorAll(".reveal")];
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add("on");
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold: 0.12});
+    revealEls.forEach(el=>io.observe(el));
+
+    // ====== Smooth anchor scroll ======
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click", (ev)=>{
+        const id = a.getAttribute("href");
+        if(!id || id === "#") return;
+        const el = document.querySelector(id);
+        if(!el) return;
+        ev.preventDefault();
+        el.scrollIntoView({behavior:"smooth", block:"start"});
+      });
+    });
+
+    // ====== Mobile drawer ======
+    const drawer = document.getElementById("drawer");
+    const openDrawer = document.getElementById("openDrawer");
+    const closeDrawer = document.getElementById("closeDrawer");
+    const drawerLinks = [...document.querySelectorAll(".drawerLink")];
+
+    function setDrawer(on){
+      drawer.classList.toggle("on", on);
+      drawer.setAttribute("aria-hidden", on ? "false":"true");
+      document.body.style.overflow = on ? "hidden" : "";
+    }
+    openDrawer?.addEventListener("click", ()=>setDrawer(true));
+    closeDrawer?.addEventListener("click", ()=>setDrawer(false));
+    drawer?.addEventListener("click", (e)=>{
+      if(e.target === drawer) setDrawer(false);
+    });
+    drawerLinks.forEach(l=>l.addEventListener("click", ()=>setDrawer(false)));
+
+    // ====== Fake form submit ======
+    const form = document.getElementById("scrimForm");
+    const note = document.getElementById("formNote");
+    form?.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const fd = new FormData(form);
+      const team = (fd.get("team")||"").toString().trim();
+      const contact = (fd.get("contact")||"").toString().trim();
+      const game = (fd.get("game")||"").toString().trim();
+
+      note.textContent = `Принято! (понарошку) ${team} • ${game}. Напишем в ${contact}.`;
+      note.style.color = "rgba(56,240,143,.92)";
+      form.reset();
+
+      setTimeout(()=>{
+        note.textContent = "Подключим отправку позже (Telegram bot / Google Forms / сервер).";
+        note.style.color = "rgba(170,179,207,.95)";
+      }, 3800);
+    });
+
+    // ====== Footer year ======
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // ====== Particles canvas ======
+    const canvas = document.getElementById("fx");
+    const ctx = canvas.getContext("2d");
+    let W=0,H=0, DPR=Math.min(2, window.devicePixelRatio||1);
+
+    function resize(){
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = Math.floor(W * DPR);
+      canvas.height = Math.floor(H * DPR);
+      canvas.style.width = W+"px";
+      canvas.style.height = H+"px";
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+    window.addEventListener("resize", resize, {passive:true});
+    resize();
+
+    const N = Math.max(40, Math.min(110, Math.floor(W/14)));
+    const pts = Array.from({length:N}).map(()=>({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: 1 + Math.random()*2.2,
+      vx: (-.35 + Math.random()*.7),
+      vy: (-.25 + Math.random()*.5),
+      a: .18 + Math.random()*.35
+    }));
+
+    let mx = W/2, my = H/2;
+    window.addEventListener("pointermove", (e)=>{ mx=e.clientX; my=e.clientY; }, {passive:true});
+
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+
+      // subtle vignette
+      const g = ctx.createRadialGradient(W*0.25, H*0.2, 80, W*0.5, H*0.5, Math.max(W,H));
+      g.addColorStop(0, "rgba(255,230,0,0.06)");
+      g.addColorStop(0.45, "rgba(124,247,255,0.04)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      for(const p of pts){
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // wrap
+        if(p.x < -20) p.x = W+20;
+        if(p.x > W+20) p.x = -20;
+        if(p.y < -20) p.y = H+20;
+        if(p.y > H+20) p.y = -20;
+
+        // mouse drift
+        const dx = mx - p.x, dy = my - p.y;
+        const d2 = dx*dx + dy*dy;
+        const pull = Math.min(0.0025, 90_000 / (d2+90_000) * 0.0025);
+        p.x += dx * pull;
+        p.y += dy * pull;
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(233,238,252,${p.a})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      // link near particles (cheap)
+      for(let i=0;i<pts.length;i++){
+        for(let j=i+1;j<pts.length;j++){
+          const a=pts[i], b=pts[j];
+          const dx=a.x-b.x, dy=a.y-b.y;
+          const d = Math.hypot(dx,dy);
+          if(d < 120){
+            const alpha = (1 - d/120) * 0.10;
+            ctx.strokeStyle = `rgba(255,230,0,${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(a.x,a.y);
+            ctx.lineTo(b.x,b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+  </script>
+</body>
+</html>
